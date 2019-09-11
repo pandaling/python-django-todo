@@ -1,0 +1,32 @@
+{% extends 'layouts.html' %}
+
+{% block content %}
+	<form action="{% url 'todo:addTodo' %}" method="post">
+		{% csrf_token %}
+		<div class="form-group">
+			<label for="exampleInputEmail1">To Do</label>
+			<input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="enter to do list" name="add_todo_name" value="{{ todo_name }}">
+		</div>
+		<input type="submit" name="" value="Save">
+	</form>
+	<br>
+	<ul class="list-group">
+		{% for item in todo_list %}
+			<li class="list-group-item">
+				<div class="d-flex flex-row">
+					<div class="d-flex flex-column flex-grow-1">
+						<p class="m-0">{{ item.item_name }}</p>
+						<small>{{ item.created_date }}</small>
+					</div>
+					{% if item.item_status == 'new' %}
+						<a href="{% url 'todo:markAsComplete' item.id %}" class="btn btn-primary btn-sm my-auto mr-3">mark as complete</a>
+						<span class="badge badge-primary float-right my-auto">{{ item.item_status }}</span>
+					{% else %}
+						<span class="badge badge-success float-right my-auto">{{ item.item_status }}</span>
+					{% endif %}
+					<a href="{% url 'todo:deleteTodoItem' item.id %}" class="my-auto ml-3"><i class="fa fa-trash-o my-auto"></i></a>
+				</div>
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock %}
